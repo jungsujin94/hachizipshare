@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hachizip share — AI 영상 팁</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,700;1,800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --black:   #0A0A0A;
+            --white:   #FFFFFF;
+            --mustard: #E8B030;
+            --mustard-bg: #F5C840;
+            --off-white: #F6F5F2;
+            --gray:    #777777;
+            --border:  #0A0A0A;
+            --border-lt: #D8D5CF;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+            height: 58px;
+            background: var(--black);
+        }
+
+        .nav-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--mustard);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--white); }
+
+        /* ── HERO ── */
+        .hero {
+            padding: 80px 60px 64px;
+            position: relative;
+            overflow: hidden;
+            background: var(--white);
+        }
+
+        .hero-cross {
+            position: absolute;
+            font-size: 18px;
+            color: var(--border-lt);
+            line-height: 1;
+            user-select: none;
+        }
+
+        .hero-cross.tl { top: 28px; left: 30px; }
+        .hero-cross.tr { top: 28px; right: 30px; }
+        .hero-cross.bl { bottom: 28px; left: 30px; }
+        .hero-cross.br { bottom: 28px; right: 30px; }
+
+        .hero-inner {
+            max-width: 1040px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 48px;
+            align-items: end;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 4.5vw, 62px);
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .hero-title .line-2 {
+            color: var(--mustard);
+        }
+
+        .hero-side {
+            padding-bottom: 6px;
+        }
+
+        .hero-desc {
+            font-size: 14px;
+            color: var(--gray);
+            line-height: 1.75;
+            max-width: 240px;
+            margin-bottom: 0;
+        }
+
+        /* ── STATS BAR ── */
+        .stats-bar {
+            background: var(--mustard);
+            padding: 0 60px;
+        }
+
+        .stats-inner {
+            max-width: 1040px;
+            margin: 0 auto;
+            display: flex;
+            align-items: stretch;
+        }
+
+        .stat-item {
+            flex: 1;
+            padding: 28px 0;
+            border-right: 1.5px solid rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-item:first-child { align-items: flex-start; }
+        .stat-item:last-child  { align-items: flex-end; border-right: none; }
+
+        .stat-num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1;
+            color: var(--black);
+        }
+
+        .stat-lbl {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(0,0,0,0.55);
+        }
+
+        /* ── MARQUEE ── */
+        .marquee-strip {
+            background: var(--black);
+            padding: 14px 0;
+            overflow: hidden;
+            border-top: 1.5px solid var(--black);
+            border-bottom: 1.5px solid var(--black);
+        }
+
+        .marquee-strip.light {
+            background: var(--mustard);
+        }
+
+        .marquee-track {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            width: max-content;
+            animation: slide 22s linear infinite;
+        }
+
+        .marquee-strip.light .marquee-track { animation-direction: reverse; }
+
+        @keyframes slide {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        .marquee-item {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            padding: 0 32px;
+            white-space: nowrap;
+        }
+
+        .marquee-strip.light .marquee-item { color: rgba(0,0,0,0.6); }
+
+        .marquee-sep {
+            color: var(--mustard);
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .marquee-strip.light .marquee-sep { color: rgba(0,0,0,0.35); }
+
+        /* ── SECTION SHARED ── */
+        .section-wrap {
+            padding: 72px 60px;
+        }
+
+        .section-wrap.bg-off { background: var(--off-white); }
+
+        .section-inner { max-width: 1040px; margin: 0 auto; }
+
+        .eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--mustard);
+            margin-bottom: 10px;
+        }
+
+        .section-heading {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(30px, 4vw, 50px);
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.05;
+            margin-bottom: 8px;
+        }
+
+        .section-sub {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 44px;
+        }
+
+        /* ── VIDEO CARDS ── */
+        .videos-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .video-card {
+            display: flex;
+            gap: 0;
+            border: 1.5px solid var(--black);
+            border-radius: 6px;
+            overflow: hidden;
+            color: inherit;
+            transition: box-shadow 0.25s, transform 0.25s;
+            background: var(--white);
+        }
+
+        .video-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 6px 6px 0 var(--black);
+        }
+
+        .v-thumb {
+            flex-shrink: 0;
+            width: 160px;
+            aspect-ratio: 9/16;
+            position: relative;
+            background: var(--off-white);
+            border-right: 1.5px solid var(--black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .v-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .v-num {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: rgba(0,0,0,0.3);
+        }
+
+        .play-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1.5px solid var(--black);
+            background: var(--mustard);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .video-card:hover .play-circle { transform: scale(1.08); }
+
+        .play-circle svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--black);
+            margin-left: 2px;
+        }
+
+        .v-body {
+            flex: 1;
+            padding: 22px 26px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .v-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .v-date { font-size: 12px; color: var(--gray); }
+
+        .v-tag {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: var(--mustard);
+            color: var(--black);
+            padding: 2px 9px;
+            border-radius: 3px;
+        }
+
+        .v-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 7px;
+        }
+
+        .v-chips-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .chip {
+            font-size: 11.5px;
+            font-weight: 500;
+            padding: 3px 10px;
+            border-radius: 3px;
+            border: 1px solid var(--black);
+            background: transparent;
+            color: var(--black);
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .video-card:hover .chip {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .v-prompt {
+            border-left: 3px solid var(--mustard);
+            background: var(--off-white);
+            border-radius: 0 4px 4px 0;
+            padding: 10px 14px;
+            margin-bottom: 18px;
+        }
+
+        .v-prompt-label {
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--mustard);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .v-prompt-text {
+            font-size: 12.5px;
+            color: var(--gray);
+            line-height: 1.65;
+            font-style: italic;
+        }
+
+        .v-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .watch-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12.5px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--black);
+            background: var(--mustard);
+            border: 1.5px solid var(--black);
+            padding: 6px 14px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .watch-btn:hover { background: var(--mustard-bg); }
+
+        /* ── TOOL CARDS GRID ── */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .tool-card {
+            background: var(--white);
+            border: 1.5px solid var(--black);
+            border-radius: 6px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.22s, transform 0.22s;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 5px 5px 0 var(--black);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .tool-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            border: 1.5px solid var(--black);
+        }
+
+        .ti-black { background: var(--black); }
+        .ti-mustard { background: var(--mustard); }
+        .ti-white { background: var(--white); }
+
+        .tool-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15.5px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .tool-type {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 1px;
+        }
+
+        .tool-desc {
+            font-size: 12.5px;
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .tiers {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
+        }
+
+        .tier {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px 11px;
+            border-radius: 4px;
+            border: 1px solid var(--border-lt);
+        }
+
+        .tier.highlight {
+            background: var(--mustard);
+            border-color: var(--black);
+        }
+
+        .tier-name {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .tier.highlight .tier-name { color: var(--black); font-weight: 600; }
+
+        .tier-price {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 12.5px;
+            font-weight: 700;
+        }
+
+        .price-free { color: #2a9d5c; }
+        .price-paid { color: var(--black); }
+
+        .tool-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray);
+            text-decoration: none;
+            margin-top: 14px;
+            transition: color 0.2s;
+        }
+
+        .tool-link:hover { color: var(--black); }
+
+        /* ── PRICING NOTE ── */
+        .pricing-note {
+            margin-top: 24px;
+            padding: 14px 18px;
+            border: 1px solid var(--border-lt);
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--gray);
+            background: var(--off-white);
+        }
+
+        .pricing-note strong { color: var(--black); }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--black);
+            padding: 32px 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        footer p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        footer .f-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--mustard);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1000px) {
+            .tools-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 720px) {
+            nav, .hero, .stats-bar, .section-wrap, footer { padding-left: 24px; padding-right: 24px; }
+            .hero-inner { grid-template-columns: 1fr; gap: 28px; }
+            .hero-desc { max-width: none; }
+            .tools-grid { grid-template-columns: 1fr; }
+            .video-card { flex-direction: column; }
+            .v-thumb { width: 100%; aspect-ratio: 3/2; border-right: none; border-bottom: 1.5px solid var(--black); }
+            .stats-inner { flex-direction: column; gap: 0; }
+            .stat-item { align-items: flex-start !important; border-right: none; border-bottom: 1.5px solid rgba(0,0,0,0.15); }
+            .stat-item:last-child { border-bottom: none; }
+            .nav-links { gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════════════════
+         NAV
+         "hachizip share" 로고 왼쪽,
+         list / AI 도구 링크 오른쪽
+    ═══════════════════════ -->
+    <nav>
+        <div class="nav-logo">
+            <span class="nav-logo-dot"></span>
+            hachizip share
+        </div>
+        <ul class="nav-links">
+            <li><a href="#videos">list</a></li>
+            <li><a href="#tools">AI 도구</a></li>
+        </ul>
+    </nav>
+
+    <!-- ═══════════════════════
+         HERO
+    ═══════════════════════ -->
+    <section class="hero">
+        <div class="hero-cross tl">✦</div>
+        <div class="hero-cross tr">✦</div>
+        <div class="hero-cross bl">✦</div>
+        <div class="hero-cross br">✦</div>
+
+        <div class="hero-inner">
+            <div>
+                <h1 class="hero-title">
+                    <span class="line-1">hachizip</span><br>
+                    <span class="line-2">ai videos</span>
+                </h1>
+            </div>
+            <div class="hero-side">
+                <p class="hero-desc">
+                    AI영상 제작 도구와 프롬프트 공유
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════
+         MARQUEE #1 — black
+    ═══════════════════════ -->
+    <div class="marquee-strip">
+        <div class="marquee-track">
+            <!-- repeat 2× for seamless loop -->
+            <span class="marquee-item">AI 영상 제작</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">hachizip share</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">도구 추천</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">팁 공유</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">AI 편집</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">음성 합성</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">영상 생성</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">AI 영상 제작</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">hachizip share</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">도구 추천</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">팁 공유</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">AI 편집</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">음성 합성</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">영상 생성</span><span class="marquee-sep">✦</span>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════
+         PORTFOLIO — MY VIDEOS
+         영상마다 수정할 항목:
+           • <a class="video-card" href="링크">
+           • .v-thumb 안에 <img src="썸네일.jpg"> 로 교체
+           • 날짜, 카테고리, 제목, 설명
+           • 도구 칩 (chip)
+         추가하려면 이 블록을 복사해서 붙여넣기
+    ═══════════════════════ -->
+    <div class="section-wrap">
+        <div class="section-inner" id="videos">
+            <div class="eyebrow">list</div>
+            <h2 class="section-heading">나의 AI 영상</h2>
+            <p class="section-sub">AI 생성, 음성 합성, 편집 도구를 조합하여 직접 제작한 영상들입니다.</p>
+
+            <!--
+            ════════════════════════════════════════
+            영상 카드 작성 방법
+            ────────────────────────────────────────
+            1. 썸네일:
+               인스타그램 영상 스크린샷을 저장한 뒤
+               c:\aivideos\ 폴더에 넣으세요 (예: thumb1.jpg).
+               그런 다음 아래 주석 처리된 <img> 태그를 꺼내고
+               play-circle div 를 삭제하세요.
+
+            2. 인스타그램 링크:
+               watch-btn 의 href 를 인스타그램 포스트 URL로 교체하세요.
+               예: href="https://www.instagram.com/p/ABC123xyz/"
+
+            3. 날짜 / 카테고리 / 제목 수정
+
+            4. chip: 실제 사용한 AI 도구 이름으로 수정
+
+            5. v-prompt-text: 영상 제작에 사용한 프롬프트 입력
+            ════════════════════════════════════════
+            -->
+            <div class="videos-list">
+
+                <!-- 영상 1 ─────────────────────── -->
+                <div class="video-card">
+                    <div class="v-thumb">
+                        <span class="v-num">01</span>
+                        <img src="images/thumb1.png" alt="영상 1">
+                    </div>
+                    <div class="v-body">
+
+                        <div class="v-chips-row">
+                            <span class="chip">ElevenLabs</span>
+                            <span class="chip">CapCut</span>
+                        </div>
+
+                        <div class="v-prompt">
+                            <span class="v-prompt-label">사용 프롬프트</span>
+                            <p class="v-prompt-text">별도 프롬프트 없이 제작되었습니다.</p>
+                        </div>
+
+                        <div class="v-footer">
+                            <a class="watch-btn" href="https://www.instagram.com/reel/DY9ndFfJad-/" target="_blank">시청하기 ↗</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 영상 2 ─────────────────────── -->
+                <div class="video-card">
+                    <div class="v-thumb">
+                        <span class="v-num">02</span>
+                        <img src="images/thumb2.png" alt="영상 2">
+                    </div>
+                    <div class="v-body">
+
+                        <div class="v-chips-row">
+                            <span class="chip">Kling AI</span>
+                            <span class="chip">CapCut</span>
+                            <span class="chip">Artlist</span>
+                        </div>
+
+                        <div class="v-prompt">
+                            <span class="v-prompt-label">사용 프롬프트</span>
+                            <p class="v-prompt-text">All of the furniture in the image getting smoothly and neatly packed into different moving boxes. Every single furniture and item in the image needs to be packed into the boxes. Then, all these boxes getting thrown out of the window one by one leaving the room in the image as a completely empty space as found in the end frame, without any items and furniture.</p>
+                        </div>
+
+                        <div class="v-footer">
+                            <a class="watch-btn" href="https://www.instagram.com/reel/DY8zsDLJY1B/" target="_blank">시청하기 ↗</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 영상 3 ─────────────────────── -->
+                <div class="video-card">
+                    <div class="v-thumb">
+                        <span class="v-num">03</span>
+                        <img src="images/thumb3.png" alt="영상 3">
+                    </div>
+                    <div class="v-body">
+
+                        <div class="v-chips-row">
+                            <span class="chip">Meta AI</span>
+                            <span class="chip">CapCut</span>
+                        </div>
+
+                        <div class="v-prompt">
+                            <span class="v-prompt-label">사용 프롬프트</span>
+                            <p class="v-prompt-text">별도 프롬프트 없이 제작되었습니다.</p>
+                        </div>
+
+                        <div class="v-footer">
+                            <a class="watch-btn" href="https://www.instagram.com/reel/DYRpWbcJfdx/" target="_blank">시청하기 ↗</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════
+         MARQUEE #2 — mustard (reverse)
+    ═══════════════════════ -->
+    <div class="marquee-strip light">
+        <div class="marquee-track">
+            <span class="marquee-item">CapCut</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">ElevenLabs</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">Runway</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">Viggle</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">Kling AI</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">Pika</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">HeyGen</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">Luma AI</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">Sora</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">CapCut</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">ElevenLabs</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">Runway</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">Viggle</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">Kling AI</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">Pika</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">HeyGen</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">Luma AI</span><span class="marquee-sep">✦</span>
+            <span class="marquee-item">Sora</span><span class="marquee-sep">✦</span>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════
+         AI TOOLS & PRICING
+    ═══════════════════════ -->
+    <div class="section-wrap bg-off">
+        <div class="section-inner" id="tools">
+            <div class="eyebrow">리소스</div>
+            <h2 class="section-heading">AI 영상 도구 & 가격</h2>
+            <p class="section-sub">영상 제작·편집·음성 합성을 위한 AI 도구와 현재 가격 정보입니다.</p>
+
+            <div class="tools-grid">
+
+                <!-- CAPCUT -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon ti-black">🎬</div>
+                        <div>
+                            <div class="tool-name">CapCut</div>
+                            <div class="tool-type">영상 편집 + AI</div>
+                        </div>
+                    </div>
+                    <p class="tool-desc">AI 자동 자막, 배경 제거, 스크립트→영상 변환 기능을 갖춘 올인원 영상 편집기.</p>
+                    <div class="tiers">
+                        <div class="tier"><span class="tier-name">무료</span><span class="tier-price price-free">$0 / 월</span></div>
+                        <div class="tier highlight"><span class="tier-name">프로</span><span class="tier-price price-paid">$7.99 / 월</span></div>
+                        <div class="tier"><span class="tier-name">프로 (연간 결제)</span><span class="tier-price price-paid">$4.99 / 월</span></div>
+                    </div>
+                    <a href="https://www.capcut.com" target="_blank" class="tool-link">capcut.com ↗</a>
+                </div>
+
+                <!-- ELEVENLABS -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon ti-mustard">🎙️</div>
+                        <div>
+                            <div class="tool-name">ElevenLabs</div>
+                            <div class="tool-type">AI 음성 합성</div>
+                        </div>
+                    </div>
+                    <p class="tool-desc">초실감 AI 음성 생성, 음성 복제, 다국어 더빙 지원. 내레이션 제작에 강력 추천.</p>
+                    <div class="tiers">
+                        <div class="tier"><span class="tier-name">무료 — 월 1만 자</span><span class="tier-price price-free">$0 / 월</span></div>
+                        <div class="tier"><span class="tier-name">스타터 — 월 3만 자</span><span class="tier-price price-paid">$5 / 월</span></div>
+                        <div class="tier highlight"><span class="tier-name">크리에이터 — 월 10만 자</span><span class="tier-price price-paid">$22 / 월</span></div>
+                        <div class="tier"><span class="tier-name">프로 — 월 50만 자</span><span class="tier-price price-paid">$99 / 월</span></div>
+                    </div>
+                    <a href="https://elevenlabs.io" target="_blank" class="tool-link">elevenlabs.io ↗</a>
+                </div>
+
+                <!-- RUNWAY -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon ti-black">🚀</div>
+                        <div>
+                            <div class="tool-name">Runway</div>
+                            <div class="tool-type">AI 영상 생성</div>
+                        </div>
+                    </div>
+                    <p class="tool-desc">텍스트→영상, 이미지→영상, 고급 모션 컨트롤. 전문 AI 영상 제작의 표준 도구.</p>
+                    <div class="tiers">
+                        <div class="tier"><span class="tier-name">무료 — 125 크레딧 (1회)</span><span class="tier-price price-free">$0</span></div>
+                        <div class="tier"><span class="tier-name">스탠다드 — 625 크레딧/월</span><span class="tier-price price-paid">$15 / 월</span></div>
+                        <div class="tier highlight"><span class="tier-name">프로 — 2,250 크레딧/월</span><span class="tier-price price-paid">$35 / 월</span></div>
+                        <div class="tier"><span class="tier-name">무제한</span><span class="tier-price price-paid">$95 / 월</span></div>
+                    </div>
+                    <a href="https://runwayml.com" target="_blank" class="tool-link">runwayml.com ↗</a>
+                </div>
+
+                <!-- VIGGLE -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon ti-mustard">💃</div>
+                        <div>
+                            <div class="tool-name">Viggle</div>
+                            <div class="tool-type">AI 모션 합성</div>
+                        </div>
+                    </div>
+                    <p class="tool-desc">참조 영상만 올리면 어떤 이미지에도 즉시 댄스·모션 애니메이션 적용 가능.</p>
+                    <div class="tiers">
+                        <div class="tier"><span class="tier-name">무료</span><span class="tier-price price-free">$0 / 월</span></div>
+                        <div class="tier"><span class="tier-name">기본</span><span class="tier-price price-paid">$12.99 / 월</span></div>
+                        <div class="tier highlight"><span class="tier-name">프로</span><span class="tier-price price-paid">$24.99 / 월</span></div>
+                        <div class="tier"><span class="tier-name">프로+</span><span class="tier-price price-paid">$49.99 / 월</span></div>
+                    </div>
+                    <a href="https://viggle.ai" target="_blank" class="tool-link">viggle.ai ↗</a>
+                </div>
+
+                <!-- KLING AI -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon ti-black">⚡</div>
+                        <div>
+                            <div class="tool-name">Kling AI</div>
+                            <div class="tool-type">AI 영상 생성</div>
+                        </div>
+                    </div>
+                    <p class="tool-desc">현실적인 물리 시뮬레이션, 최대 3분 영상 생성, 립싱크 지원. 가성비 최고.</p>
+                    <div class="tiers">
+                        <div class="tier"><span class="tier-name">무료 — 월 66 크레딧</span><span class="tier-price price-free">$0 / 월</span></div>
+                        <div class="tier"><span class="tier-name">스탠다드 — 660 크레딧/월</span><span class="tier-price price-paid">$8 / 월</span></div>
+                        <div class="tier highlight"><span class="tier-name">프로 — 3,000 크레딧/월</span><span class="tier-price price-paid">$28 / 월</span></div>
+                    </div>
+                    <a href="https://klingai.com" target="_blank" class="tool-link">klingai.com ↗</a>
+                </div>
+
+                <!-- PIKA -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon ti-mustard">🎨</div>
+                        <div>
+                            <div class="tool-name">Pika</div>
+                            <div class="tool-type">AI 영상 생성</div>
+                        </div>
+                    </div>
+                    <p class="tool-desc">텍스트·이미지로 영상 생성 및 편집. 립싱크, 아웃페인팅, 시네마틱 효과 지원.</p>
+                    <div class="tiers">
+                        <div class="tier"><span class="tier-name">무료</span><span class="tier-price price-free">$0 / 월</span></div>
+                        <div class="tier"><span class="tier-name">기본</span><span class="tier-price price-paid">$8 / 월</span></div>
+                        <div class="tier highlight"><span class="tier-name">스탠다드</span><span class="tier-price price-paid">$28 / 월</span></div>
+                        <div class="tier"><span class="tier-name">무제한</span><span class="tier-price price-paid">$58 / 월</span></div>
+                    </div>
+                    <a href="https://pika.art" target="_blank" class="tool-link">pika.art ↗</a>
+                </div>
+
+                <!-- HEYGEN -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon ti-black">🤖</div>
+                        <div>
+                            <div class="tool-name">HeyGen</div>
+                            <div class="tool-type">AI 아바타 & 토킹헤드</div>
+                        </div>
+                    </div>
+                    <p class="tool-desc">현실적인 AI 아바타 영상, 자동 영상 번역, 립싱크. 대변인 영상 제작에 최적.</p>
+                    <div class="tiers">
+                        <div class="tier"><span class="tier-name">무료 — 1분 크레딧</span><span class="tier-price price-free">$0 / 월</span></div>
+                        <div class="tier highlight"><span class="tier-name">크리에이터</span><span class="tier-price price-paid">$29 / 월</span></div>
+                        <div class="tier"><span class="tier-name">비즈니스</span><span class="tier-price price-paid">$89 / 월</span></div>
+                        <div class="tier"><span class="tier-name">엔터프라이즈</span><span class="tier-price price-paid">문의</span></div>
+                    </div>
+                    <a href="https://heygen.com" target="_blank" class="tool-link">heygen.com ↗</a>
+                </div>
+
+                <!-- LUMA AI -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon ti-mustard">🌙</div>
+                        <div>
+                            <div class="tool-name">Luma AI</div>
+                            <div class="tool-type">AI 영상 생성</div>
+                        </div>
+                    </div>
+                    <p class="tool-desc">Dream Machine — 텍스트·이미지에서 자연스럽고 영화 같은 영상 생성.</p>
+                    <div class="tiers">
+                        <div class="tier"><span class="tier-name">무료 — 월 30회</span><span class="tier-price price-free">$0 / 월</span></div>
+                        <div class="tier"><span class="tier-name">플러스</span><span class="tier-price price-paid">$9.99 / 월</span></div>
+                        <div class="tier highlight"><span class="tier-name">프로</span><span class="tier-price price-paid">$29.99 / 월</span></div>
+                        <div class="tier"><span class="tier-name">프리미어</span><span class="tier-price price-paid">$99.99 / 월</span></div>
+                    </div>
+                    <a href="https://lumalabs.ai" target="_blank" class="tool-link">lumalabs.ai ↗</a>
+                </div>
+
+                <!-- SORA -->
+                <div class="tool-card">
+                    <div class="tool-header">
+                        <div class="tool-icon ti-black">✨</div>
+                        <div>
+                            <div class="tool-name">Sora</div>
+                            <div class="tool-type">AI 영상 생성</div>
+                        </div>
+                    </div>
+                    <p class="tool-desc">OpenAI의 텍스트→영상 모델. 최대 60초의 물리적으로 정확한 시네마틱 영상 생성.</p>
+                    <div class="tiers">
+                        <div class="tier"><span class="tier-name">ChatGPT 플러스 포함</span><span class="tier-price price-paid">$20 / 월</span></div>
+                        <div class="tier highlight"><span class="tier-name">ChatGPT 프로 포함</span><span class="tier-price price-paid">$200 / 월</span></div>
+                    </div>
+                    <a href="https://sora.com" target="_blank" class="tool-link">sora.com ↗</a>
+                </div>
+
+            </div>
+
+            <p class="pricing-note">
+                <strong>※ 가격 안내</strong> — 위 가격은 2025년 기준이며 환율·플랜 변경에 따라 달라질 수 있습니다. 결제 전 각 도구의 공식 웹사이트에서 최신 가격을 반드시 확인하세요.
+            </p>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════
+         FOOTER
+    ═══════════════════════ -->
+    <footer>
+        <p class="f-logo">hachizip share</p>
+        <p>AI 도구로 직접 만들고 경험한 콘텐츠를 공유합니다.</p>
+    </footer>
+
+</body>
+</html>
